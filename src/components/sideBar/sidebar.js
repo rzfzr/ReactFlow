@@ -15,7 +15,7 @@ export default () => {
   };
 
   return (
-    <aside style={{ overflowY: 'scroll', maxHeight: '100vh', }}>
+    <aside style={{ }}>
       <div className="description">Arraste os componentes para a esquerda.</div>
       {nodes.map((node, index) => (
         <div
@@ -24,7 +24,7 @@ export default () => {
           style={{ borderColor: node.color }}
           onDragStart={(event) => onDragStart(event, node.extras.type, node.name)}
           draggable
-          title={node.extras.description} // Adicionado aqui
+          title={node.extras.description}
         >
           {node.name}
         </div>
