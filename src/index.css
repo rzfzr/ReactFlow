@@ -2,14 +2,14 @@
     flex-direction: column;
     display: flex;
     flex-grow: 1;
-    height: 100%;
-    background-color: #2d2d2d;
+    height: 100vh;
   }
   
   .dndflow aside {
     border-right: 1px solid #eee;
     padding: 15px 10px;
     font-size: 12px;
+    overflow-y: scroll;
     background: #ffffffea;
   }
   
@@ -19,7 +19,6 @@
   
   .dndflow .dndnode {
     height: 20px;
-    padding: 4px;
     border: 1px solid #1a192b;
     border-radius: 2px;
     margin-bottom: 10px;

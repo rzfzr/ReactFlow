@@ -1,0 +1,36 @@
+.component-body {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(251, 250, 246);
+    border: 1px solid rgb(221, 221, 221);
+    width: 160px;
+    height: fit-content;
+    border-radius: 16px;
+}
+
+.component-title {
+    margin: 1px;
+    padding: 1px;
+    border-bottom: 1px solid rgb(221, 221, 221);
+    height: fit-content;
+    width: 100%;
+}
+
+.component-content {
+    display: flex;
+    flex-direction: column;
+    margin: 1px;
+    padding: 1px;
+    width: 100%;
+}
+
+.component-port {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: flex-end;
+    margin: 1px;
+    padding: 1px;   
+    height: fit-content;
+    width: 100%;
+}
