@@ -22,45 +22,23 @@ const nodeTypes = { genericCustomNode: GenericCustomNode };
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-function generateNodes(nodeData) {
-  let node = {};
-  node.data = {};
+function generateNodes(nodeData, position) {
+  const node = {};
+  node.id = getId();
+  node.type = 'genericCustomNode'
+  node.position = position;
 
-  node.data.name = nodeData.name;
   node.isConnectable = nodeData.isConnectable;
-  node.data.nameOfIn = nodeData.name;
-  node.type = nodeData.type;
   node.style = { backgroundColor: nodeData.color };
 
-
-  switch (nodeData.type) {
-    case 'controller':
-      node.data.ins = ['default_in'];
-      node.data.outs = ['setup()', 'loop()'];
-      break;
-    case 'port':
-      node.data.ins = ['in'];
-      node.data.outs = ['out'];
-      break;
-    case 'logic':
-      node.data.ins = ['declare', 'in'];
-      node.data.outs = ['body'];
-      break;
-    case 'built-in':
-      node.data.methods = nodeData.methods;
-      break;
-    case 'built-in-constant':
-      node.data.ins = ['in'];
-      node.data.outs = ['out'];
-      break;
-    case 'component':
-      node.data.methods = nodeData.methods;
-      break;
-    default:
-      node.data.ins = ['default_in'];
-      node.data.outs = ['default_out'];
-  }
-
+  node.data = {
+    name: `${nodeData.name}`,//why?
+    nameOfIn: `${nodeData.name}`,//why?
+    label: `${nodeData.name}`,
+    ins: nodeData.ins || [],
+    outs: nodeData.outs || [],//methods should be added to ins AND outs
+    methods: `${nodeData.methods}`,
+  };
   return node;
 }
 
@@ -73,33 +51,6 @@ function edgeNodes(edgeData) {
   edge.data.nameOfIn = edgeData.name;
   edge.type = edgeData.type;
 
-  switch (edgeData.type) {
-    case 'controller':
-      edge.data.ins = ['default_in'];
-      edge.data.outs = ['setup()', 'loop()'];
-      break;
-    case 'port':
-      edge.data.ins = ['in'];
-      edge.data.outs = ['out'];
-      break;
-    case 'logic':
-      edge.data.ins = ['declare', 'in'];
-      edge.data.outs = ['body'];
-      break;
-    case 'built-in':
-      edge.data.methods = edgeData.methods;
-      break;
-    case 'built-in-constant':
-      edge.data.ins = ['in'];
-      edge.data.outs = ['out'];
-      break;
-    case 'component':
-      edge.data.methods = edgeData.methods;
-      break;
-    default:
-      edge.data.ins = ['default_in'];
-      edge.data.outs = ['default_out'];
-  }
 
   return <CustomEdge key={edgeData.id} {...edge} />;
 }
@@ -136,18 +87,8 @@ const DnDFlow = () => {
         y: event.clientY,
       });
 
-      const newNode = generateNodes(nodeData);
-      
-      newNode.id = getId();
-      newNode.position = position;
-      newNode.data = { 
-        label: `${nodeData.name}`,
-        ins: `${nodeData.ins}`,
-        outs: `${nodeData.outs}`,
-        methods: `${nodeData.methods}`,
-      };
+      const newNode = generateNodes(nodeData, position);
 
-      newNode.type = 'genericCustomNode'
       const newEdge = edgeNodes(edgeData);
       edgeNodes.id = getId();
       edgeNodes.position = position;
@@ -157,6 +98,8 @@ const DnDFlow = () => {
         outs: `${edgeData.outs}`,
         methods: `${edgeData.methods}`,
       };
+
+      console.log('new node:', newNode);
 
       setEdges((eds) => eds.concat(newEdge));
       setNodes((nds) => nds.concat(newNode));
