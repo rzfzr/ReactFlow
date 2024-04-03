@@ -137,7 +137,6 @@ const DnDFlow = () => {
       });
 
       const newNode = generateNodes(nodeData);
-      console.log('got new node', newNode, 'with ', nodeData)
       
       newNode.id = getId();
       newNode.position = position;
@@ -147,8 +146,8 @@ const DnDFlow = () => {
         outs: `${nodeData.outs}`,
         methods: `${nodeData.methods}`,
       };
-      // newNode.data = nodeData;
-      // newNode.type = { type:  GenericCustomNode};
+
+      newNode.type = 'genericCustomNode'
       const newEdge = edgeNodes(edgeData);
       edgeNodes.id = getId();
       edgeNodes.position = position;
