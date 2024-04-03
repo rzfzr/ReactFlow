@@ -9,8 +9,8 @@ export default () => {
     setNodes(data);
   }, []);
 
-  const onDragStart = (event, nodeType, nodeName) => {
-    event.dataTransfer.setData('application/reactflow', JSON.stringify({ type: nodeType, name: nodeName }));
+  const onDragStart = (event, node) => {
+    event.dataTransfer.setData('application/reactflow', JSON.stringify(node));
     event.dataTransfer.effectAllowed = 'move';
   };
 
@@ -22,7 +22,7 @@ export default () => {
           key={index}
           className={`dndnode ${node.color}`}
           style={{ borderColor: node.color }}
-          onDragStart={(event) => onDragStart(event, node.extras.type, node.name)}
+          onDragStart={(event) => onDragStart(event, node)}
           draggable
           title={node.extras.description}
         >

@@ -22,83 +22,42 @@ const nodeTypes = { genericCustomNode: GenericCustomNode };
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-function generateNodes(nodeData) {
-  let node = {};
-  node.data = {};
+function generateNode(nodeData, position) {
+  const node = {};
+  node.id = getId();
+  node.type = 'genericCustomNode'
+  node.position = position;
 
-  node.data.name = nodeData.name;
   node.isConnectable = nodeData.isConnectable;
-  node.data.nameOfIn = nodeData.name;
-  node.type = nodeData.type;
+  node.style = { backgroundColor: nodeData.color };
 
-
-  switch (nodeData.type) {
-    case 'controller':
-      node.data.ins = ['default_in'];
-      node.data.outs = ['setup()', 'loop()'];
-      break;
-    case 'port':
-      node.data.ins = ['in'];
-      node.data.outs = ['out'];
-      break;
-    case 'logic':
-      node.data.ins = ['declare', 'in'];
-      node.data.outs = ['body'];
-      break;
-    case 'built-in':
-      node.data.methods = nodeData.methods;
-      break;
-    case 'built-in-constant':
-      node.data.ins = ['in'];
-      node.data.outs = ['out'];
-      break;
-    case 'component':
-      node.data.methods = nodeData.methods;
-      break;
-    default:
-      node.data.ins = ['default_in'];
-      node.data.outs = ['default_out'];
-  }
-
+  node.data = {
+    name: `${nodeData.name}`,//why?
+    nameOfIn: `${nodeData.name}`,//why?
+    label: `${nodeData.name}`,
+    ins: nodeData.ins || [],
+    outs: nodeData.outs || [],//methods should be added to ins AND outs
+    methods: nodeData.methods || [],
+  };
   return node;
 }
 
-function edgeNodes(edgeData) {
+function generateEdge(edgeData, position) {
   let edge = {};
-  edge.data = {};
+  edge.id = getId();
+  edge.position = position;
 
-  edge.data.name = edgeData.name;
   edge.isConnectable = edgeData.isConnectable;
-  edge.data.nameOfIn = edgeData.name;
   edge.type = edgeData.type;
 
-  switch (edgeData.type) {
-    case 'controller':
-      edge.data.ins = ['default_in'];
-      edge.data.outs = ['setup()', 'loop()'];
-      break;
-    case 'port':
-      edge.data.ins = ['in'];
-      edge.data.outs = ['out'];
-      break;
-    case 'logic':
-      edge.data.ins = ['declare', 'in'];
-      edge.data.outs = ['body'];
-      break;
-    case 'built-in':
-      edge.data.methods = edgeData.methods;
-      break;
-    case 'built-in-constant':
-      edge.data.ins = ['in'];
-      edge.data.outs = ['out'];
-      break;
-    case 'component':
-      edge.data.methods = edgeData.methods;
-      break;
-    default:
-      edge.data.ins = ['default_in'];
-      edge.data.outs = ['default_out'];
-  }
+  edge.data = {//todo fix these
+    nameOfIn: edgeData.name,
+    label: `${edgeData.name}`,
+    ins: `${edgeData.ins}`,
+    outs: `${edgeData.outs}`,
+    methods: `${edgeData.methods}`,
+  };
+
 
   return <CustomEdge key={edgeData.id} {...edge} />;
 }
@@ -122,43 +81,24 @@ const DnDFlow = () => {
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-      const nodeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
-      const edgeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
       const type = event.dataTransfer.getData('application/reactflow');
 
-      if (typeof type === 'undefined' || !nodeData) {
+      if (typeof type === 'undefined') {
         return;
       }
-
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
 
-      const newNode = generateNodes(nodeData);
-      
-      newNode.id = getId();
-      newNode.position = position;
-      newNode.data = { 
-        label: `${nodeData.name}`,
-        ins: `${nodeData.ins}`,
-        outs: `${nodeData.outs}`,
-        methods: `${nodeData.methods}`,
-      };
-      // newNode.data = nodeData;
-      // newNode.type = { type:  GenericCustomNode};
-      const newEdge = edgeNodes(edgeData);
-      edgeNodes.id = getId();
-      edgeNodes.position = position;
-      edgeNodes.data = { 
-        label: `${edgeData.name}`,
-        ins: `${edgeData.ins}`,
-        outs: `${edgeData.outs}`,
-        methods: `${edgeData.methods}`,
-      };
-
-      setEdges((eds) => eds.concat(newEdge));
+      const nodeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
+      if (!nodeData) return;
+      const newNode = generateNode(nodeData, position);
       setNodes((nds) => nds.concat(newNode));
+
+      const edgeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
+      const newEdge = generateEdge(edgeData);
+      setEdges((eds) => eds.concat(newEdge));
     },
     [reactFlowInstance, setNodes],
   );
@@ -187,7 +127,7 @@ const DnDFlow = () => {
           </ReactFlow>
         </div>
         <Sidebar />
-        <MiniMap position='bottom-left' />
+        <MiniMap position='bottom-left' nodeColor={node => node.color} />
       </ReactFlowProvider>
     </div>
   );
