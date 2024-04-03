@@ -42,14 +42,21 @@ function generateNodes(nodeData, position) {
   return node;
 }
 
-function edgeNodes(edgeData) {
+function generateEdges(edgeData, position) {
   let edge = {};
-  edge.data = {};
+  edge.id = getId();
+  edge.position = position;
 
-  edge.data.name = edgeData.name;
   edge.isConnectable = edgeData.isConnectable;
-  edge.data.nameOfIn = edgeData.name;
   edge.type = edgeData.type;
+
+  edge.data = {//todo fix these
+    nameOfIn: edgeData.name,
+    label: `${edgeData.name}`,
+    ins: `${edgeData.ins}`,
+    outs: `${edgeData.outs}`,
+    methods: `${edgeData.methods}`,
+  };
 
 
   return <CustomEdge key={edgeData.id} {...edge} />;
@@ -89,17 +96,8 @@ const DnDFlow = () => {
 
       const newNode = generateNodes(nodeData, position);
 
-      const newEdge = edgeNodes(edgeData);
-      edgeNodes.id = getId();
-      edgeNodes.position = position;
-      edgeNodes.data = { 
-        label: `${edgeData.name}`,
-        ins: `${edgeData.ins}`,
-        outs: `${edgeData.outs}`,
-        methods: `${edgeData.methods}`,
-      };
+      const newEdge = generateEdges(edgeData);
 
-      console.log('new node:', newNode);
 
       setEdges((eds) => eds.concat(newEdge));
       setNodes((nds) => nds.concat(newNode));
