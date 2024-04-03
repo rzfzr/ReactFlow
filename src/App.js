@@ -37,7 +37,7 @@ function generateNode(nodeData, position) {
     label: `${nodeData.name}`,
     ins: nodeData.ins || [],
     outs: nodeData.outs || [],//methods should be added to ins AND outs
-    methods: `${nodeData.methods}`,
+    methods: nodeData.methods || [],
   };
   return node;
 }
