@@ -30,6 +30,7 @@ function generateNodes(nodeData) {
   node.isConnectable = nodeData.isConnectable;
   node.data.nameOfIn = nodeData.name;
   node.type = nodeData.type;
+  node.style = { backgroundColor: nodeData.color };
 
 
   switch (nodeData.type) {
@@ -136,6 +137,7 @@ const DnDFlow = () => {
       });
 
       const newNode = generateNodes(nodeData);
+      console.log('got new node', newNode, 'with ', nodeData)
       
       newNode.id = getId();
       newNode.position = position;
