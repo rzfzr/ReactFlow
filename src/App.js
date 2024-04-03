@@ -189,7 +189,7 @@ const DnDFlow = () => {
           </ReactFlow>
         </div>
         <Sidebar />
-        <MiniMap position='bottom-left' />
+        <MiniMap position='bottom-left' nodeColor={node => node.color} />
       </ReactFlowProvider>
     </div>
   );
