@@ -3,14 +3,8 @@ import { Handle, HandleType, Position } from 'reactflow';
 import './GenericCustomNode.css';
 
 export default function GenericCustomNode(props) {
-  const handleStyle = {
-    // position: 'relative',
-    // width: '10px',
-    // height: '10px',
-    // background: 'rgb(189, 196, 204)',
-    // borderRadius: '0',
-    // zIndex: '10',
-  };
+  console.log(props);
+
   return (
     <div className="component-body"
       draggable={props.isDraggable}
@@ -19,30 +13,45 @@ export default function GenericCustomNode(props) {
         <p>{props.data.label}</p>
       </div>
       <div className="component-content">
-        <div className="component-port">
-          <Handle
-            type={props.data.types}
-            position={Position.Left}
-            id={props.id}
-            isConnectable={true}
-            style={handleStyle}
-          />
-          <Handle
-            type={props.data.types}
-            position={Position.Left}
-            id={props.id}
-            isConnectable={true}
-            style={handleStyle}
-          />
-          <p>{props.data.ins}</p>
-          <p>{props.data.outs}</p>
-          <Handle
-            type={props.data.types}
-            position={Position.Right}
-            id={props.id}
-            isConnectable={true}
-            style={handleStyle}
-          />
+        <div className="component-port"
+          style={{ height: 150 }}>
+
+          {props.data.ins.map((item, index) => {
+            const id = `out-${index}`;
+            const offset = 50 + index * 50;
+            return (
+              <>
+                <p style={{ position: 'absolute', top: `${offset}px`, right: '20px', margin: 0, lineHeight: '20px' }}>
+                  {id}
+                </p>
+                <Handle
+                  id={id}
+                  type={props.data.types}
+                  position={Position.Left}
+                  isConnectable={true}
+                  style={{ position: 'absolute', top: `${offset}px` }}
+                />
+              </>
+            );
+          })}
+          {props.data.outs.map((item, index) => {
+            const id = `out-${index}`;
+            const offset = 50 + index * 50;
+            return (
+              <>
+                <p style={{ position: 'absolute', top: `${offset}px`, right: '20px', margin: 0, lineHeight: '20px' }}>
+                  {id}
+                </p>
+                <Handle
+                  id={id}
+                  type={props.data.types}
+                  position={Position.Right}
+                  isConnectable={true}
+                  style={{ position: 'absolute', top: `${offset}px` }}
+                />
+              </>
+            );
+          })}
         </div>
       </div>
     </div>
