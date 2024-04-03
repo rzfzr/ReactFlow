@@ -22,7 +22,7 @@ const nodeTypes = { genericCustomNode: GenericCustomNode };
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-function generateNodes(nodeData, position) {
+function generateNode(nodeData, position) {
   const node = {};
   node.id = getId();
   node.type = 'genericCustomNode'
@@ -42,7 +42,7 @@ function generateNodes(nodeData, position) {
   return node;
 }
 
-function generateEdges(edgeData, position) {
+function generateEdge(edgeData, position) {
   let edge = {};
   edge.id = getId();
   edge.position = position;
@@ -81,26 +81,24 @@ const DnDFlow = () => {
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-      const nodeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
-      const edgeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
       const type = event.dataTransfer.getData('application/reactflow');
 
-      if (typeof type === 'undefined' || !nodeData) {
+      if (typeof type === 'undefined') {
         return;
       }
-
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
 
-      const newNode = generateNodes(nodeData, position);
-
-      const newEdge = generateEdges(edgeData);
-
-
-      setEdges((eds) => eds.concat(newEdge));
+      const nodeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
+      if (!nodeData) return;
+      const newNode = generateNode(nodeData, position);
       setNodes((nds) => nds.concat(newNode));
+
+      const edgeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
+      const newEdge = generateEdge(edgeData);
+      setEdges((eds) => eds.concat(newEdge));
     },
     [reactFlowInstance, setNodes],
   );
