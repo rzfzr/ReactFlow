@@ -51,7 +51,7 @@ export default function GenericCustomNode(props) {
       handle.render = () => {
         const offset = 50 + handle.handleInfo.index * 50;
         return (
-          <>
+          <div key={handle.handleInfo.id}>
             <p style={{ position: 'absolute', top: `${offset}px`, right: '20px', margin: 0, lineHeight: '20px' }}>
               {handle.edge}
             </p>
@@ -62,7 +62,7 @@ export default function GenericCustomNode(props) {
               isConnectable={true}
               style={{ position: 'absolute', top: `${offset}px` }}
             />
-          </>
+          </div >
         );
       }
     });
